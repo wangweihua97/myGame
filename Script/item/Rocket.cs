@@ -10,8 +10,8 @@ namespace Item
         {
             base.Init();
             liftTime = 10;
-            speed = 20;
-            GravitySpped = 1;
+            speed = 150;
+            GravitySpped = 4;
             explosionRadius = 40;
             name = "rocket";
         }

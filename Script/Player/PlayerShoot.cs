@@ -10,13 +10,11 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-            EventCenter.instance.AddEventListener<KeyCode>("keyDown", Shoot);
+            EventCenter.instance.AddEventListener("keyJDown", Shoot);
         }
 
-        public void Shoot(KeyCode arg0)
+        public void Shoot()
         {
-            if (arg0 != KeyCode.J)
-                return;
             GameObject go = GameObjectPool.instance.GetGameObject("rocket");
             if (!go)
             {

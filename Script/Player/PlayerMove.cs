@@ -11,63 +11,56 @@ namespace Player
     {
         private int horizontal;
         private bool isFloating = false;
-        private int faceHorizontal = 1;
-
         public float moveSpeed = 5f;
-
         public float mJumpSpeed = 5f;
 
         // Start is called before the first frame update
         void Start()
         {
-            EventCenter.instance.AddEventListener<KeyCode>("keyDown", CheckInputDown);
-            EventCenter.instance.AddEventListener<KeyCode>("keyUp", CheckInputUp);
+            EventCenter.instance.AddEventListener("keyADown", KeyADown);
+            EventCenter.instance.AddEventListener("keyDDown", KeyDDown);
+            EventCenter.instance.AddEventListener("keySpaceDown", KeySpaceDown);
+            EventCenter.instance.AddEventListener("keyAUp", KeyAUp);
+            EventCenter.instance.AddEventListener("keyDUp", KeyDUp);
             GameMgr.instance.AddUpdateEventListener(MoveUpdata);
         }
 
-        private void CheckInputDown(KeyCode arg0)
+        void KeyADown()
         {
-            switch (arg0)
-            {
-                case KeyCode.A:
-                    horizontal = -1;
-                    break;
-                case KeyCode.D:
-                    horizontal = 1;
-                    break;
-                case KeyCode.Space:
-                    DoJump();
-                    break;
-                default:
-                    break;
-            }
+            horizontal = -1;
         }
-
-        private void CheckInputUp(KeyCode arg0)
+        
+        void KeyDDown()
         {
-            switch (arg0)
-            {
-                case KeyCode.A:
-                    horizontal = 0;
-                    GetComponent<PlayerFSM>().ToIdel();
-                    break;
-                case KeyCode.D:
-                    horizontal = 0;
-                    GetComponent<PlayerFSM>().ToIdel();
-                    break;
-                default:
-                    break;
-            }
+            horizontal = 1;
+        }
+        
+        void KeySpaceDown()
+        {
+            DoJump();
+        }
+        
+        void KeyAUp()
+        {
+            horizontal = 0;
+            GetComponent<PlayerFSM>().ToIdel();
+        }
+        
+        void KeyDUp()
+        {
+            horizontal = 0;
+            GetComponent<PlayerFSM>().ToIdel();
         }
 
         private void MoveUpdata()
         {
             if (horizontal == 0)
                 return;
-            if (horizontal != faceHorizontal)
+            if (horizontal != GetComponent<PlayerProperty>().faceHorizontal)
             {
                 GetComponent<PlayerProperty>().skeletonAnimation.skeleton.ScaleX = horizontal;
-                faceHorizontal = horizontal;
+                GetComponent<PlayerProperty>().faceHorizontal = horizontal;
+                EventCenter.instance.EventTrigger("turnAround",horizontal);
             }
 
             transform.Translate(Vector3.right * horizontal * moveSpeed * Time.deltaTime);

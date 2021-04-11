@@ -8,6 +8,8 @@ public class PlayerProperty : MonoBehaviour
     public static PlayerProperty instance;
     public ItemEnum.ItemType arms;
     public SkeletonAnimation skeletonAnimation;
+    public float aimAngle = 0;
+    public int faceHorizontal = 1;
     public PlayerAmination playerAmination;
     public bool isJump;
     private void Awake()

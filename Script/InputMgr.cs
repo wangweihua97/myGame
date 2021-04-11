@@ -20,10 +20,16 @@ public class InputMgr : MonoBehaviour
     {
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyDown(key))
+        {
             EventCenter.instance.EventTrigger("keyDown", key);
+            EventCenter.instance.EventTrigger("key" + key + "Down");
+        }
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyUp(key))
+        {
             EventCenter.instance.EventTrigger("keyUp", key);
+            EventCenter.instance.EventTrigger("key" + key + "Up");
+        }
     }
     private void MyUpdate()
     {
@@ -35,5 +41,6 @@ public class InputMgr : MonoBehaviour
         CheckKeyCode(KeyCode.D);
         CheckKeyCode(KeyCode.Space);
         CheckKeyCode(KeyCode.J);
+        CheckKeyCode(KeyCode.E);
     }
 }
