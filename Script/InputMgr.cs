@@ -42,5 +42,6 @@ public class InputMgr : MonoBehaviour
         CheckKeyCode(KeyCode.Space);
         CheckKeyCode(KeyCode.J);
         CheckKeyCode(KeyCode.E);
+        CheckKeyCode(KeyCode.Q);
     }
 }

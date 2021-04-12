@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameObjectPool : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class GameObjectPool : MonoBehaviour
                 pools.Add(objectName,new List<GameObject>());
             }
             go.transform.SetParent(gameObjectPool.transform);
-            go.transform.localPosition = new Vector3(0, 0, go.transform.position.z);
+            go.transform.localPosition = new Vector3(Random.Range(-100f, 100f), Random.Range(-100f, 100f), go.transform.position.z);
             pools[objectName].Add(go);
         }
 }

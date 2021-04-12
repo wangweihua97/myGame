@@ -10,31 +10,27 @@ namespace Item
         {
             base.Init();
             liftTime = 10;
-            speed = 150;
+            speed = 30;
             GravitySpped = 4;
             explosionRadius = 40;
             name = "rocket";
+            initZAngle = -90f;
         }
 
-        public override void Shoot(Transform transform, Vector2 angle, float power)
+        public override void Shoot(Transform transform,int faceHorizontal,float angle, float power)
         {
+            base.Shoot(transform,faceHorizontal,angle,power);
             OnCreat();
             dead = false;
-            gameObject.transform.position = transform.position + new Vector3(2,2,0);
-            gameObject.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
-            xSpeed = speed * power * angle.x / Mathf.Sqrt(Mathf.Pow(angle.x,2) + Mathf.Pow(angle.y,2));
-            ySpped = speed * power * angle.y / Mathf.Sqrt(Mathf.Pow(angle.x,2) + Mathf.Pow(angle.y,2));
+            GetComponent<SpriteRenderer>().flipY = faceHorizontal == -1;
+            gameObject.transform.position = transform.position + new Vector3(1.6f * faceHorizontal* Mathf.Cos(Mathf.Deg2Rad*angle)+0.5f* faceHorizontal,0.8f+faceHorizontal*3f* Mathf.Sin(Mathf.Deg2Rad*angle),0);
+            xSpeed = faceHorizontal * speed * power * Mathf.Cos(Mathf.Deg2Rad*angle);
+            ySpped = faceHorizontal * speed * power * Mathf.Sin(Mathf.Deg2Rad*angle);
         }
-
-        void OnCollisionEnter2D (Collision2D coll)
+        
+        public override bool Collision(Collision2D coll)
         {
-            if (dead) {
-                return;
-            }
-            ContactPoint2D contact = coll.contacts[0];
-            Vector2 pos = contact.point;
-            if (coll.gameObject.CompareTag(tag: "ground"))
-                OnRemove(pos);
+            return true;
         }
     }
 }

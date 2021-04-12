@@ -26,7 +26,36 @@ namespace ArmsState
             AddState<ShotgunState>();
 
             //set the initial state
-            SetInitialState<PistolState>();
+            SetInitialState<MissileState>();
+        }
+        public void ToEmptyArmsState()
+        {
+            ChangeState<EmptyArmsState>();
+        }
+        
+        public void ToGrenadeState()
+        {
+            ChangeState<GrenadeState>();
+        }
+        
+        public void ToMissileState()
+        {
+            ChangeState<MissileState>();
+        }
+
+        public void ToPistolState()
+        {
+            ChangeState<PistolState>();
+        }
+        
+        public void ToRifleState()
+        {
+            ChangeState<RifleState>();
+        }
+        
+        public void ToShotgunState()
+        {
+            ChangeState<ShotgunState>();
         }
     }
 }

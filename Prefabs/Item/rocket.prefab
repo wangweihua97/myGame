@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3589687156335194763}
   - component: {fileID: 8956883504503408768}
   - component: {fileID: -9035546475522230562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: rocket
-  m_TagString: Untagged
+  m_TagString: item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,8 @@ MonoBehaviour:
   GravitySpped: 0
   dead: 0
   name: 
+  initZAngle: 0
+  playerTransform: {fileID: 0}
   explosionRadius: 0
   speed: 0
 --- !u!70 &8956883504503408768
@@ -220,10 +222,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.95
       objectReference: {fileID: 0}
+    - target: {fileID: 4356418258871384780, guid: 82a85896decf442459df0a00d2864d3b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4356418258871384782, guid: 82a85896decf442459df0a00d2864d3b,
         type: 3}
       propertyPath: m_Name
       value: fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356418258871384782, guid: 82a85896decf442459df0a00d2864d3b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82a85896decf442459df0a00d2864d3b, type: 3}

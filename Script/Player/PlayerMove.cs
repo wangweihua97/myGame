@@ -43,18 +43,20 @@ namespace Player
         void KeyAUp()
         {
             horizontal = 0;
-            GetComponent<PlayerFSM>().ToIdel();
+            if (GetComponent<PlayerFSM>().CurrentState.StateName == "MoveMainState")
+                GetComponent<PlayerFSM>().ToIdel();
         }
         
         void KeyDUp()
         {
             horizontal = 0;
-            GetComponent<PlayerFSM>().ToIdel();
+            if (GetComponent<PlayerFSM>().CurrentState.StateName == "MoveMainState")
+                GetComponent<PlayerFSM>().ToIdel();
         }
 
         private void MoveUpdata()
         {
-            if (horizontal == 0)
+            if (horizontal == 0 || !PlayerProperty.instance.canMove)
                 return;
             if (horizontal != GetComponent<PlayerProperty>().faceHorizontal)
             {
@@ -66,7 +68,7 @@ namespace Player
             transform.Translate(Vector3.right * horizontal * moveSpeed * Time.deltaTime);
             if (!isFloating)
             {
-                if (GetComponent<PlayerFSM>().CurrentState.StateName != "MoveMainState")
+                if (GetComponent<PlayerFSM>().CurrentState.StateName == "IdleMainState")
                     GetComponent<PlayerFSM>().ToMove();
             }
         }
