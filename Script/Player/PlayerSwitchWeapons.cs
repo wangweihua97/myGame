@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using ArmsState;
 using Item;
+using Mirror;
 using UnityEngine;
 
 namespace Player
 {
-    public class PlayerSwitchWeapons : MonoBehaviour
+    public class PlayerSwitchWeapons : NetworkBehaviour
     {
+        public PlayerProperty PlayerPropertyInstance;
         //切换武器的顺序是导弹，手枪，步枪，手榴弹
         private Dictionary<int, ItemEnum.ItemType> order;
 
@@ -24,18 +26,24 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-            EventCenter.instance.AddEventListener("keyQDown", KeyQDown);
+            GameMgr.instance.AddFristUpdateEventListener(InitUpdate);
+        }
+        
+        void InitUpdate()
+        {
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyQDown", KeyQDown);
+            GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
         }
 
         // Update is called once per frame
         void KeyQDown()
         {
-            if(!PlayerProperty.instance.canSwitchWeapon)
+            if(!PlayerPropertyInstance.canSwitchWeapon)
                 return;
-            int orderIndex = GetOrder(GetComponent<PlayerProperty>().arms) + 1;
+            int orderIndex = GetOrder(PlayerPropertyInstance.arms) + 1;
             orderIndex = orderIndex > 4 ? 1 : orderIndex;
             ItemEnum.ItemType itemType = order[orderIndex];
-            GetComponent<PlayerProperty>().arms = itemType;
+            PlayerPropertyInstance.arms = itemType;
             ChangeArmsState(itemType);
         }
 
@@ -54,21 +62,21 @@ namespace Player
             switch (itemType)
             {
                 case ItemEnum.ItemType.missile:
-                    ArmsFSM.instance.ToMissileState();
+                    PlayerPropertyInstance.armsFsm.ToMissileState();
                     break;
                 case ItemEnum.ItemType.pistol:
-                    ArmsFSM.instance.ToPistolState();
+                    PlayerPropertyInstance.armsFsm.ToPistolState();
                     break;
                 case ItemEnum.ItemType.rifle:
-                    ArmsFSM.instance.ToRifleState();
+                    PlayerPropertyInstance.armsFsm.ToRifleState();
                     break;
                 case ItemEnum.ItemType.grenade:
-                    ArmsFSM.instance.ToGrenadeState();
+                    PlayerPropertyInstance.armsFsm.ToGrenadeState();
                     break;
                 default:
                     break;
             }
-            PlayerAmination.instance.PlaySwitchAnimation(ArmsFSM.instance.CurrentState.StateName);
+            PlayerPropertyInstance.playerAmination.PlaySwitchAnimation(PlayerPropertyInstance.armsFsm.CurrentState.StateName);
         }
     }
 }

@@ -3,24 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using ArmsState;
 using Item;
+using Mirror;
 using PlayerState;
 using Spine.Unity;
 using UnityEngine;
 
 namespace Player
 {
-    public class PlayerAmination : MonoBehaviour
+    public class PlayerAmination : NetworkBehaviour
     {
         /*public AnimationReferenceAsset idleEmptyArms,idleGrenade,idleMissile,idlePistol,idleRifle,idleShotgun;
         public AnimationReferenceAsset shootEmptyArms,shootGrenade,shootMissile,shootPistol,shootRifle,shootShotgun;
         public AnimationReferenceAsset handEmptyArms,handGrenade,handMissile,handPistol,handRifle,handShotgun;
         public AnimationReferenceAsset jump,toGround,idle,move,hit;*/
-        public static PlayerAmination instance;
-
-        private void Awake()
-        {
-            instance = this;
-        }
+        public PlayerProperty PlayerPropertyInstance;
 
         public void UpdateAnimatin(bool isLoop)
         {
@@ -34,23 +30,23 @@ namespace Player
         public void PlaySwitchAnimation(string armsState)
         {
             string animationName = "Hands_Gun_" + GetAminationName(armsState) + "_Jump";
-            GetComponent<PlayerProperty>().skeletonAnimation.AnimationState.SetAnimation(2, animationName, false);
+            PlayerPropertyInstance.skeletonAnimation.AnimationState.SetAnimation(2, animationName, false);
         }
         
         public void PlayShootAnimation(string armsState ,bool isLoop)
         {
             string animationName = "Shoot_" + GetAminationName(armsState);
-            GetComponent<PlayerProperty>().skeletonAnimation.AnimationState.SetAnimation(2, animationName, isLoop);
+            PlayerPropertyInstance.skeletonAnimation.AnimationState.SetAnimation(2, animationName, isLoop);
         }
         
         public void PlayEmptyAnimation()
         {
-            GetComponent<PlayerProperty>().skeletonAnimation.AnimationState.AddEmptyAnimation(2,1,0);
+            PlayerPropertyInstance.skeletonAnimation.AnimationState.AddEmptyAnimation(2,1,0);
         }
         
         public void ClearAnimation(int track)
         {
-            GetComponent<PlayerProperty>().skeletonAnimation.AnimationState.ClearTrack(track);
+            PlayerPropertyInstance.skeletonAnimation.AnimationState.ClearTrack(track);
         }
 
         void PlayAnimation(string armsState, string playerState, bool isLoop)
@@ -80,7 +76,7 @@ namespace Player
             if (GetAminationName(armsState) == "")
                 return;
             animationName += GetAminationName(armsState);
-            GetComponent<PlayerProperty>().skeletonAnimation.AnimationState.SetAnimation(1, animationName, isLoop);
+            PlayerPropertyInstance.skeletonAnimation.AnimationState.SetAnimation(1, animationName, isLoop);
         }
 
         string GetAminationName(string armsState)

@@ -1,7 +1,6 @@
 ﻿using Item;
 using Player;
 using RobustFSM.Base;
-using UnityEngine.XR.WSA.Input;
 
 namespace PlayerState
 {
@@ -18,7 +17,8 @@ namespace PlayerState
         {
             base.Enter();
             OwnerFSM.gameObject.GetComponent<PlayerAmination>().UpdateAnimatin(false);
-            EventCenter.instance.AddEventListener("onTheGround",ToIdleState);
+            EventCenter instance = OwnerFSM.isLocalPlayer ? EventCenter.localPlayer : EventCenter.anotherPlayer;
+            instance.AddEventListener("onTheGround",ToIdleState);
         }
         
         void ToIdleState()
@@ -29,7 +29,8 @@ namespace PlayerState
         public override void Exit()
         {
             base.Exit();
-            EventCenter.instance.RemoveEventListener("onTheGround",ToIdleState);
+            EventCenter instance = OwnerFSM.isLocalPlayer ? EventCenter.localPlayer : EventCenter.anotherPlayer;
+            instance.RemoveEventListener("onTheGround",ToIdleState);
         }
 
         public override void ManualExecute()

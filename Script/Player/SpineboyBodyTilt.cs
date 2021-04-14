@@ -1,16 +1,18 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using Spine;
 using Spine.Unity;
 using UnityEngine;
 
 namespace Player {
-	public class SpineboyBodyTilt : MonoBehaviour {
+	public class SpineboyBodyTilt : NetworkBehaviour {
 
 		[SpineBone]
 		public string head = "head", leftHand = "leftHand", rightHand = "rightHand";
 		Bone headBone, leftHandBone, rightHandBone;
+		public PlayerProperty PlayerPropertyInstance;
 
 		void Start () {
 			var skeletonAnimation = GetComponent<SkeletonAnimation>();
@@ -24,9 +26,9 @@ namespace Player {
 
 		private void UpdateLocal (ISkeletonAnimation animated)
 		{
-			leftHandBone.Rotation += PlayerProperty.instance.aimAngle * PlayerProperty.instance.faceHorizontal;
-			rightHandBone.Rotation += PlayerProperty.instance.aimAngle * PlayerProperty.instance.faceHorizontal;
-			headBone.Rotation += PlayerProperty.instance.aimAngle * PlayerProperty.instance.faceHorizontal;
+			leftHandBone.Rotation += PlayerPropertyInstance.aimAngle * PlayerPropertyInstance.faceHorizontal;
+			rightHandBone.Rotation += PlayerPropertyInstance.aimAngle * PlayerPropertyInstance.faceHorizontal;
+			headBone.Rotation += PlayerPropertyInstance.aimAngle * PlayerPropertyInstance.faceHorizontal;
 		}
 	}
 

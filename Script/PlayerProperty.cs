@@ -1,11 +1,18 @@
-﻿using Item;
+﻿using System.Reflection;
+using ArmsState;
+using Item;
+using Mirror;
 using Player;
+using PlayerState;
 using Spine.Unity;
 using UnityEngine;
 
-public class PlayerProperty : MonoBehaviour
+public class PlayerProperty : NetworkBehaviour
 {
-    public static PlayerProperty instance;
+    public static PlayerProperty localPlayer;
+    public static PlayerProperty anotherPlayer;
+    public PlayerFSM playerFsm;
+    public ArmsFSM armsFsm;
     public ItemEnum.ItemType arms;
     public SkeletonAnimation skeletonAnimation;
     public float aimAngle = 0;
@@ -17,14 +24,24 @@ public class PlayerProperty : MonoBehaviour
     public bool canSwitchWeapon;
     public int healthy;
     private HealthyUI healthyUI;
+    public EventCenter EventCenterInstance;
+
     private void Awake()
     {
-        instance = this;
         canMove = true;
         canShoot = true;
         canSwitchWeapon = true;
         skeletonAnimation = GetComponent<SkeletonAnimation>();
         playerAmination = GetComponent<PlayerAmination>();
+        playerFsm = GetComponent<PlayerFSM>();
+        armsFsm = GetComponent<ArmsFSM>();
+        EventCenterInstance = GetComponent<EventCenter>();
+        playerAmination.PlayerPropertyInstance = this;
+        GetComponent<PlayerAim>().PlayerPropertyInstance = this;
+        GetComponent<PlayerMove>().PlayerPropertyInstance = this;
+        GetComponent<PlayerShoot>().PlayerPropertyInstance = this;
+        GetComponent<PlayerSwitchWeapons>().PlayerPropertyInstance = this;
+        GetComponent<SpineboyBodyTilt>().PlayerPropertyInstance = this;
         arms = ItemEnum.ItemType.missile;
         healthy = 100;
     }
@@ -32,7 +49,16 @@ public class PlayerProperty : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerAmination.instance.UpdateAnimatin(true);
+        if (isLocalPlayer)
+        {
+            localPlayer = this;
+            playerAmination.UpdateAnimatin(true);
+        }
+        else
+        {
+            anotherPlayer = this;
+            playerAmination.UpdateAnimatin(true);
+        }
         healthyUI = UIMgr.instance.CreatHealthyUI().GetComponent<HealthyUI>();
         healthyUI.Init(transform,100,100);
     }

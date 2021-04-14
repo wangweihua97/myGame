@@ -1,14 +1,22 @@
 ﻿using System;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Events : MonoBehaviour
+public class Events : NetworkBehaviour
 {
-    private void Awake()
+    private void Start()
     {
-        EventCenter.instance.AddEventListener("offTheGround",offTheGround);
-        EventCenter.instance.AddEventListener("onTheGround",onTheGround);
-        EventCenter.instance.AddEventListener<int>("turnAround",turnAround);
+        GameMgr.instance.AddFristUpdateEventListener(InitUpdate);
+    }
+
+    void InitUpdate()
+    {
+        EventCenter instance = isLocalPlayer ? EventCenter.localPlayer : EventCenter.anotherPlayer;
+        instance.AddEventListener("offTheGround",offTheGround);
+        instance.AddEventListener("onTheGround",onTheGround);
+        instance.AddEventListener<int>("turnAround",turnAround);
+        GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
     }
 
     public void offTheGround()

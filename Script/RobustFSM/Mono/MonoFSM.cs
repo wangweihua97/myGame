@@ -3,12 +3,13 @@ using RobustFSM.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.RobustFSM.Mono
 {
-    public class MonoFSM : MonoBehaviour, IFSM
+    public class MonoFSM : NetworkBehaviour, IFSM
     {
         #region Variables
 
@@ -450,7 +451,7 @@ namespace Assets.RobustFSM.Mono
                 string printText = MachineName + "\n" + CurrentState.StateName;
 
                 //render the label
-                Handles.Label(transform.position, printText);
+                //Handles.Label(transform.position, printText);
             }
         }
 

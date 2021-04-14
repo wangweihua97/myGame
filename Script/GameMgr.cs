@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,6 +19,11 @@ public class GameMgr : MonoBehaviour
     void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        Screen.fullScreen = false;
     }
 
     public void AddFristUpdateEventListener(UnityAction unityAction)

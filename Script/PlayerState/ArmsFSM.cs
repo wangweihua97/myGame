@@ -5,13 +5,6 @@ namespace ArmsState
 {
     public class ArmsFSM:MonoFSM
     {
-        public static ArmsFSM instance;
-
-        public void Awake()
-        {
-            instance = this;
-        }
-        
         public override void AddStates()
         {
             //set the custom update frequenct

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
+using Player;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventCenter : MonoBehaviour
+public class EventCenter : NetworkBehaviour
 {
     public interface IEventInfo { }
     // 实现两个个参数
@@ -34,14 +36,17 @@ public class EventCenter : MonoBehaviour
             actions += action;
         }
     }
-    
     // key对应事件的名字，value对应的是监听这个事件对应的委托函数
     private Dictionary<string, IEventInfo> eventDic = new Dictionary<string, IEventInfo>();
-    public static EventCenter instance;
+    public static EventCenter localPlayer;
+    public static EventCenter anotherPlayer;
 
-    private void Awake()
+    private void Start()
     {
-        instance = this;
+        if (isLocalPlayer)
+            localPlayer = this;
+        else
+            anotherPlayer = this;
     }
 
     // 添加事件监听，两个参数的

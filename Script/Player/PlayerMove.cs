@@ -1,30 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using Mirror;
 using PlayerState;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Player
 {
-    public class PlayerMove : MonoBehaviour
+    public class PlayerMove : NetworkBehaviour
     {
         private int horizontal;
         private bool isFloating = false;
         public float moveSpeed = 5f;
-        public float mJumpSpeed = 5f;
+        public PlayerProperty PlayerPropertyInstance;
 
         // Start is called before the first frame update
         void Start()
         {
-            EventCenter.instance.AddEventListener("keyADown", KeyADown);
-            EventCenter.instance.AddEventListener("keyDDown", KeyDDown);
-            EventCenter.instance.AddEventListener("keySpaceDown", KeySpaceDown);
-            EventCenter.instance.AddEventListener("keyAUp", KeyAUp);
-            EventCenter.instance.AddEventListener("keyDUp", KeyDUp);
-            GameMgr.instance.AddUpdateEventListener(MoveUpdata);
+            GameMgr.instance.AddFristUpdateEventListener(InitUpdate);
         }
 
+        void InitUpdate()
+        {
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyADown", KeyADown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyDDown", KeyDDown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keySpaceDown", KeySpaceDown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyAUp", KeyAUp);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyDUp", KeyDUp);
+            GameMgr.instance.AddUpdateEventListener(MoveUpdata);
+            GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
+        }
         void KeyADown()
         {
             horizontal = -1;
@@ -39,7 +44,7 @@ namespace Player
         {
             DoJump();
         }
-        
+
         void KeyAUp()
         {
             horizontal = 0;
@@ -56,13 +61,13 @@ namespace Player
 
         private void MoveUpdata()
         {
-            if (horizontal == 0 || !PlayerProperty.instance.canMove)
+            if (horizontal == 0 || !PlayerPropertyInstance.canMove)
                 return;
-            if (horizontal != GetComponent<PlayerProperty>().faceHorizontal)
+            if (horizontal != PlayerPropertyInstance.faceHorizontal)
             {
-                GetComponent<PlayerProperty>().skeletonAnimation.skeleton.ScaleX = horizontal;
-                GetComponent<PlayerProperty>().faceHorizontal = horizontal;
-                EventCenter.instance.EventTrigger("turnAround",horizontal);
+                PlayerPropertyInstance.skeletonAnimation.skeleton.ScaleX = horizontal;
+                PlayerPropertyInstance.faceHorizontal = horizontal;
+                PlayerPropertyInstance.EventCenterInstance.EventTrigger("turnAround",horizontal);
             }
 
             transform.Translate(Vector3.right * horizontal * moveSpeed * Time.deltaTime);
@@ -87,7 +92,7 @@ namespace Player
         {
             if (!coll.gameObject.CompareTag(tag: "ground"))
                 return;
-            EventCenter.instance.EventTrigger("onTheGround");
+            PlayerPropertyInstance.EventCenterInstance.EventTrigger("onTheGround");
             ContactPoint2D contact = coll.contacts[0];
             Quaternion rot = Quaternion.FromToRotation(Vector3.up, contact.normal);
             Vector3 pos = contact.point; //这个就是碰撞点
@@ -99,7 +104,7 @@ namespace Player
         {
             if (!coll.gameObject.CompareTag("ground"))
                 return;
-            EventCenter.instance.EventTrigger("offTheGround");
+            PlayerPropertyInstance.EventCenterInstance.EventTrigger("offTheGround");
             isFloating = true;
         }
     }

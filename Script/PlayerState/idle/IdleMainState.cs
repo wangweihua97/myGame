@@ -2,7 +2,6 @@
 using Player;
 using PlayerState.Idle;
 using RobustFSM.Base;
-using UnityEngine.XR.WSA.Input;
 
 namespace PlayerState
 {

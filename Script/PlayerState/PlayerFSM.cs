@@ -5,13 +5,7 @@ namespace PlayerState
 {
     public class PlayerFSM:MonoFSM
     {
-        public static PlayerFSM instance;
 
-        public void Awake()
-        {
-            instance = this;
-        }
-        
         public override void AddStates()
         {
             //set the custom update frequenct

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Player
 {
-    public class PlayerAim : MonoBehaviour
+    public class PlayerAim : NetworkBehaviour
     {
         public GameObject aimGameObject;
         public Transform aimUITransform;
@@ -14,6 +15,7 @@ namespace Player
         private int vertical = 0;
         private float distance;
         private bool aimUIVisble = true;
+        public PlayerProperty PlayerPropertyInstance;
 
         private void Awake()
         {
@@ -23,14 +25,20 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
-            EventCenter.instance.AddEventListener("keyWDown", KeyWDown);
-            EventCenter.instance.AddEventListener("keySDown", KeySDown);
-            EventCenter.instance.AddEventListener("keyWUp", KeyWUp);
-            EventCenter.instance.AddEventListener("keySUp", KeySUp);
-            EventCenter.instance.AddEventListener("keyEDown", KeyEDown);
-            EventCenter.instance.AddEventListener<int>("turnAround", TurnAround);
-            GameMgr.instance.AddUpdateEventListener(AimMoveUpdate);
             distance = aimUITransform.transform.localPosition.x;
+            GameMgr.instance.AddFristUpdateEventListener(InitUpdate);
+        }
+        
+        void InitUpdate()
+        {
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyWDown", KeyWDown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keySDown", KeySDown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyWUp", KeyWUp);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keySUp", KeySUp);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyEDown", KeyEDown);
+            PlayerPropertyInstance.EventCenterInstance.AddEventListener<int>("turnAround", TurnAround);
+            GameMgr.instance.AddUpdateEventListener(AimMoveUpdate);
+            GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
         }
 
         void KeyWDown()
@@ -63,13 +71,13 @@ namespace Player
         {
             if (vertical == 0)
                 return;
-            PlayerProperty.instance.aimAngle +=
-                vertical * PlayerProperty.instance.faceHorizontal * aimSpeed * Time.deltaTime;
-            if (PlayerProperty.instance.aimAngle > 90)
-                PlayerProperty.instance.aimAngle = 90;
-            if (PlayerProperty.instance.aimAngle < -90)
-                PlayerProperty.instance.aimAngle = -90;
-            aimGameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, PlayerProperty.instance.aimAngle));
+            PlayerPropertyInstance.aimAngle +=
+                vertical * PlayerPropertyInstance.faceHorizontal * aimSpeed * Time.deltaTime;
+            if (PlayerPropertyInstance.aimAngle > 90)
+                PlayerPropertyInstance.aimAngle = 90;
+            if (PlayerPropertyInstance.aimAngle < -90)
+                PlayerPropertyInstance.aimAngle = -90;
+            aimGameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, PlayerPropertyInstance.aimAngle));
         }
 
         void TurnAround(int horizontal)
@@ -78,8 +86,8 @@ namespace Player
                 aimUITransform.transform.localPosition.y, aimUITransform.transform.localPosition.z);
             float rotation = horizontal == 1 ? 0 : 180;
             aimUITransform.localEulerAngles =new Vector3(aimUITransform.localEulerAngles.x ,rotation ,aimUITransform.localEulerAngles.z);
-            PlayerProperty.instance.aimAngle = -1 * PlayerProperty.instance.aimAngle;
-            aimGameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, PlayerProperty.instance.aimAngle));
+            PlayerPropertyInstance.aimAngle = -1 * PlayerPropertyInstance.aimAngle;
+            aimGameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, PlayerPropertyInstance.aimAngle));
         }
 
         public void SetAimUIVisible(bool visible)

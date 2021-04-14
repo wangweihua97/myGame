@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class InputMgr : MonoBehaviour
+public class InputMgr : NetworkBehaviour
 {
     private bool isStart = true;
     void Start()
@@ -21,19 +22,19 @@ public class InputMgr : MonoBehaviour
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyDown(key))
         {
-            EventCenter.instance.EventTrigger("keyDown", key);
-            EventCenter.instance.EventTrigger("key" + key + "Down");
+            CmdKeyDown(PlayerProperty.localPlayer, key);
         }
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyUp(key))
         {
-            EventCenter.instance.EventTrigger("keyUp", key);
-            EventCenter.instance.EventTrigger("key" + key + "Up");
+            CmdKeyUp(PlayerProperty.localPlayer, key);
         }
     }
     private void MyUpdate()
     {
         if (!isStart)
+            return;
+        if(!isLocalPlayer)
             return;
         CheckKeyCode(KeyCode.W);
         CheckKeyCode(KeyCode.S);
@@ -43,5 +44,34 @@ public class InputMgr : MonoBehaviour
         CheckKeyCode(KeyCode.J);
         CheckKeyCode(KeyCode.E);
         CheckKeyCode(KeyCode.Q);
+    }
+
+    [Command]
+    void CmdKeyDown(PlayerProperty playerProperty,KeyCode key)
+    {
+        playerProperty.EventCenterInstance.EventTrigger("keyDown", key);
+        playerProperty.EventCenterInstance.EventTrigger("key" + key + "Down");
+        RpcKeyDown(key);
+    }
+    [ClientRpc]
+    private void RpcKeyDown(KeyCode key)
+    {
+        Debug.Log("Down"+netIdentity.netId);
+        GetComponent<EventCenter>().EventTrigger("keyDown", key);
+        GetComponent<EventCenter>().EventTrigger("key" + key + "Down");
+    }
+    [Command]
+    void CmdKeyUp(PlayerProperty playerProperty,KeyCode key)
+    {
+        playerProperty.EventCenterInstance.EventTrigger("keyUp", key);
+        playerProperty.EventCenterInstance.EventTrigger("key" + key + "Up");
+        RpcKeyUp(key);
+    }
+    [ClientRpc]
+    private void RpcKeyUp(KeyCode key)
+    {
+        Debug.Log("Up"+netIdentity.netId);
+        GetComponent<EventCenter>().EventTrigger("keyUp", key);
+        GetComponent<EventCenter>().EventTrigger("key" + key + "Up");
     }
 }

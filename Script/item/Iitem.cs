@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 namespace Item
 {
-    public class Iitem: MonoBehaviour
+    public class Iitem: NetworkBehaviour
     {
         public Sprite img;
         public float liftTime = 2;
@@ -95,6 +96,23 @@ namespace Item
             GameObjectPool.instance.RemoveGameObject(name ,gameObject);
             if (explosionRadius <= 0)
                 return;
+            if(!hasAuthority)
+                NetworkServer.Spawn(this.gameObject);
+            if(!isServer)
+                return;
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(pos, (float)explosionRadius/20);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                // TODO: two calls for getcomponent is bad
+                if(colliders[i].GetComponent<DestructibleSprite>())
+                    colliders[i].GetComponent<DestructibleSprite>().ApplyDamage(pos, explosionRadius);
+            }
+
+            RpcDemage(pos, explosionRadius);
+        }
+        [ClientRpc]
+        private void RpcDemage(Vector2 pos,int  explosionRadius)
+        {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(pos, (float)explosionRadius/20);
             for (int i = 0; i < colliders.Length; i++)
             {
