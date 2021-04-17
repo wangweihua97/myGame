@@ -48,6 +48,8 @@ public class InputMgr : NetworkBehaviour
         CheckKeyCode(KeyCode.J);
         CheckKeyCode(KeyCode.E);
         CheckKeyCode(KeyCode.Q);
+        CheckKeyCode(KeyCode.R);
+        CheckKeyCode(KeyCode.T);
     }
 
     [Command]

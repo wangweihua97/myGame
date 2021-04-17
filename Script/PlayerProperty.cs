@@ -45,6 +45,7 @@ public class PlayerProperty : NetworkBehaviour
         GetComponent<PlayerShoot>().PlayerPropertyInstance = this;
         GetComponent<PlayerSwitchWeapons>().PlayerPropertyInstance = this;
         GetComponent<SpineboyBodyTilt>().PlayerPropertyInstance = this;
+        GetComponent<PlayerCamera>().PlayerPropertyInstance = this; 
         arms = ItemEnum.ItemType.missile;
         healthy = 100;
     }

@@ -16,6 +16,7 @@ public class Events : NetworkBehaviour
         instance.AddEventListener("offTheGround",offTheGround);
         instance.AddEventListener("onTheGround",onTheGround);
         instance.AddEventListener<int>("turnAround",turnAround);
+        instance.AddEventListener<Vector2>("ScreenMove",ScreenMove);
         GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
     }
 
@@ -30,6 +31,11 @@ public class Events : NetworkBehaviour
     }
 
     public void turnAround(int horizontal)
+    {
+        
+    }
+
+    public void ScreenMove(Vector2 vector2)
     {
         
     }
