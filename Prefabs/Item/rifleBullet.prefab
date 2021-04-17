@@ -155,6 +155,8 @@ MonoBehaviour:
   name: 
   initZAngle: 0
   playerTransform: {fileID: 0}
+  minHurt: 1
+  MaxHurt: 50
   explosionRadius: 0
   speed: 0
 --- !u!114 &815412831687998496

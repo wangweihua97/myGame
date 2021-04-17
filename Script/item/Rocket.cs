@@ -12,9 +12,11 @@ namespace Item
             liftTime = 10;
             speed = 30;
             GravitySpped = 4;
-            explosionRadius = 40;
+            explosionRadius = 55;
             name = "rocket";
             initZAngle = -90f;
+            minHurt = 3;
+            MaxHurt = 20;
         }
 
         public override void Shoot(Transform transform,int faceHorizontal,float angle, float power)

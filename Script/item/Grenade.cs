@@ -18,6 +18,8 @@ namespace Item
             name = "grenade";
             GetComponent<Rigidbody2D>().gravityScale = 1;
             _rotationZ = 0;
+            minHurt = 5;
+            MaxHurt = 40;
         }
 
         public override void Shoot(Transform transform,int faceHorizontal,float angle, float power)
@@ -44,7 +46,7 @@ namespace Item
         public override void LifeEnd()
         {
             GameMgr.instance.RemoveUpdateEventListener(RotationUpdate);
-            OnRemove(new Vector2(transform.position.x, transform.position.y));
+            OnRemove(new Vector2(transform.position.x, transform.position.y) ,null);
             GetComponent<Rigidbody2D>().gravityScale = 0;
         }
 

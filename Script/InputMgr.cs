@@ -22,11 +22,15 @@ public class InputMgr : NetworkBehaviour
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyDown(key))
         {
+            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyDown", key);
+            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Down");
             CmdKeyDown(PlayerProperty.localPlayer, key);
         }
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyUp(key))
         {
+            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyUp", key);
+            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Up");
             CmdKeyUp(PlayerProperty.localPlayer, key);
         }
     }
@@ -56,6 +60,8 @@ public class InputMgr : NetworkBehaviour
     [ClientRpc]
     private void RpcKeyDown(KeyCode key)
     {
+        if(isLocalPlayer)
+            return;
         Debug.Log("Down"+netIdentity.netId);
         GetComponent<EventCenter>().EventTrigger("keyDown", key);
         GetComponent<EventCenter>().EventTrigger("key" + key + "Down");
@@ -70,6 +76,8 @@ public class InputMgr : NetworkBehaviour
     [ClientRpc]
     private void RpcKeyUp(KeyCode key)
     {
+        if(isLocalPlayer)
+            return;
         Debug.Log("Up"+netIdentity.netId);
         GetComponent<EventCenter>().EventTrigger("keyUp", key);
         GetComponent<EventCenter>().EventTrigger("key" + key + "Up");

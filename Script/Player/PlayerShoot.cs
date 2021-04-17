@@ -165,10 +165,21 @@ namespace Player
 
         public void Shoot(float powerValue)
         {
+            if(!isServer)
+                return;
             if(!PlayerPropertyInstance.canShoot)
                 return;
             GameObject go = ItemMgr.instance.CreateItem(PlayerPropertyInstance.arms);
             go.GetComponent<Iitem>().Shoot(transform,PlayerPropertyInstance.faceHorizontal,PlayerPropertyInstance.aimAngle,powerValue);
+            RpcShoow(go.GetComponent<Iitem>(),PlayerPropertyInstance.faceHorizontal,PlayerPropertyInstance.aimAngle,powerValue,PlayerPropertyInstance.arms);
+        }
+        
+        [ClientRpc]
+        private void RpcShoow(Iitem item,int faceHorizontal,float angle,float powerValue,ItemEnum.ItemType arms)
+        {
+            if (item.transform.parent)
+                ItemMgr.instance.CreateItem(arms);
+            item.Shoot(transform,faceHorizontal,angle,powerValue);
         }
     }
 }

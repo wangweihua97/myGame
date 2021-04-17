@@ -58,6 +58,8 @@ namespace Item
                     }
                     break;
             }
+            if(NetMgr.instance)
+                NetMgr.instance.SpawnGameObject(go);
             return go;
         }
     }

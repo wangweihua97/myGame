@@ -27,7 +27,7 @@ public class HealthyUI : MonoBehaviour
         playerTransform = transform;
         this.max = max;
         this.cur = cur;
-        RefreshText(cur);
+        RefreshText();
     }
 
     private void OnGUI()
@@ -38,9 +38,9 @@ public class HealthyUI : MonoBehaviour
         rectTransform.position = pos;
     }
 
-    public void RefreshText(int num)
+    public void RefreshText()
     {
-        text.text = "" + num;
-        slider.value = cur / max ;
+        text.text = "" + playerTransform.GetComponent<PlayerProperty>().healthy;
+        slider.value = (float)playerTransform.GetComponent<PlayerProperty>().healthy / max ;
     }
 }

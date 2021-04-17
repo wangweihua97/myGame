@@ -20,8 +20,14 @@ public class NetMgr : NetworkManager
     /// <para>The default implementation for this function creates a new player object from the playerPrefab.</para>
     /// </summary>
     /// <param name="conn">Connection from client.</param>
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+    }
+
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
+        instance = this;
         base.OnServerAddPlayer(conn);
         instance = this;
     }
@@ -34,5 +40,10 @@ public class NetMgr : NetworkManager
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
+    }
+
+    public void SpawnGameObject(GameObject go)
+    {
+        NetworkServer.Spawn(go);
     }
 }

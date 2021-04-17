@@ -15,6 +15,8 @@ namespace Item
             GravitySpped = 0;
             explosionRadius = 0;
             name = "rifleBullet";
+            minHurt = 3;
+            MaxHurt = 5;
         }
 
         public override void Shoot(Transform transform,int faceHorizontal,float angle, float power)

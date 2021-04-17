@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using Player;
 using UnityEngine;
 
 namespace Item
@@ -18,6 +19,9 @@ namespace Item
         public string name;
         public float initZAngle = 0;
         public Transform playerTransform;
+        public int minHurt = 1;
+        public int MaxHurt = 50;
+            
 
         public int explosionRadius;
 
@@ -86,40 +90,66 @@ namespace Item
             ContactPoint2D contact = coll.contacts[0];
             Vector2 pos = contact.point;
             if (coll.gameObject.CompareTag(tag: "ground"))
-                OnRemove(pos);
+                OnRemove(pos ,null);
+            else if(coll.gameObject.CompareTag(tag: "Player")&&coll.transform != playerTransform)
+                OnRemove(pos ,coll.gameObject.GetComponent<PlayerProperty>());
         }
         
-        public void OnRemove(Vector2 pos)
+        public void OnRemove(Vector2 pos, PlayerProperty playerProperty)
         {
             dead = true;
             startTIme = 0;
             GameObjectPool.instance.RemoveGameObject(name ,gameObject);
-            if (explosionRadius <= 0)
-                return;
-            if(!hasAuthority)
-                NetworkServer.Spawn(this.gameObject);
             if(!isServer)
                 return;
+            if (explosionRadius <= 0 && playerProperty!= null)
+            {
+                playerProperty.playerDamage.Hurt(MaxHurt);
+                RpcHurt(playerProperty, MaxHurt);
+                return;
+            }
             Collider2D[] colliders = Physics2D.OverlapCircleAll(pos, (float)explosionRadius/20);
             for (int i = 0; i < colliders.Length; i++)
             {
                 // TODO: two calls for getcomponent is bad
-                if(colliders[i].GetComponent<DestructibleSprite>())
+                if (colliders[i].GetComponent<DestructibleSprite>())
+                {
                     colliders[i].GetComponent<DestructibleSprite>().ApplyDamage(pos, explosionRadius);
+                    RpcDemage(pos, explosionRadius);
+                }
+                if (colliders[i].GetComponent<PlayerDamage>())
+                {
+                    colliders[i].GetComponent<PlayerDamage>().Damage(pos, (float)explosionRadius/20);
+                    float distance = Mathf.Sqrt(Vector2.SqrMagnitude((Vector2)colliders[i].transform.position - pos));
+                    int hurt = minHurt + (int)(20 * (MaxHurt - minHurt) / distance / explosionRadius) ;
+                    colliders[i].GetComponent<PlayerDamage>().Hurt(MaxHurt);
+                    RpcHurt(colliders[i].GetComponent<PlayerProperty>(), MaxHurt);
+                }
+                    
             }
-
-            RpcDemage(pos, explosionRadius);
         }
         [ClientRpc]
         private void RpcDemage(Vector2 pos,int  explosionRadius)
         {
+            dead = true;
+            startTIme = 0;
+            GameObjectPool.instance.RemoveGameObject(name ,gameObject);
             Collider2D[] colliders = Physics2D.OverlapCircleAll(pos, (float)explosionRadius/20);
             for (int i = 0; i < colliders.Length; i++)
             {
                 // TODO: two calls for getcomponent is bad
                 if(colliders[i].GetComponent<DestructibleSprite>())
                     colliders[i].GetComponent<DestructibleSprite>().ApplyDamage(pos, explosionRadius);
+                if (colliders[i].GetComponent<PlayerDamage>())
+                {
+                    colliders[i].GetComponent<PlayerDamage>().Damage(pos, (float) explosionRadius / 20);
+                }
             }
+        }
+        [ClientRpc]
+        private void RpcHurt(PlayerProperty playerProperty, int hurt)
+        {
+            playerProperty.playerDamage.Hurt(hurt);
         }
     }
 }

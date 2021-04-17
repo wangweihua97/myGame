@@ -13,8 +13,10 @@ namespace Item
             liftTime = 10;
             speed = 40;
             GravitySpped = 0;
-            explosionRadius = 10;
+            explosionRadius = 15;
             name = "bullet";
+            minHurt = 10;
+            MaxHurt = 10;
         }
 
         public override void Shoot(Transform transform,int faceHorizontal,float angle, float power)

@@ -18,12 +18,13 @@ public class PlayerProperty : NetworkBehaviour
     public float aimAngle = 0;
     public int faceHorizontal = 1;
     public PlayerAmination playerAmination;
+    public PlayerDamage playerDamage;
     public bool isJump;
     public bool canMove;
     public bool canShoot;
     public bool canSwitchWeapon;
     public int healthy;
-    private HealthyUI healthyUI;
+    public HealthyUI healthyUI;
     public EventCenter EventCenterInstance;
 
     private void Awake()
@@ -36,6 +37,8 @@ public class PlayerProperty : NetworkBehaviour
         playerFsm = GetComponent<PlayerFSM>();
         armsFsm = GetComponent<ArmsFSM>();
         EventCenterInstance = GetComponent<EventCenter>();
+        playerDamage = GetComponent<PlayerDamage>();
+        playerDamage.PlayerPropertyInstance = this;
         playerAmination.PlayerPropertyInstance = this;
         GetComponent<PlayerAim>().PlayerPropertyInstance = this;
         GetComponent<PlayerMove>().PlayerPropertyInstance = this;

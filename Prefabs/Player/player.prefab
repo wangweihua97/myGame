@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 7520673313826865992}
   - component: {fileID: 7520673313826865995}
   - component: {fileID: 1429837866225656801}
+  - component: {fileID: 2336047480427682855}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -398,7 +399,6 @@ MonoBehaviour:
   syncInterval: 0.1
   moveSpeed: 2
   PlayerPropertyInstance: {fileID: 0}
-  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826866000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,11 +435,14 @@ MonoBehaviour:
   aimAngle: 0
   faceHorizontal: 1
   playerAmination: {fileID: 0}
+  playerDamage: {fileID: 0}
   isJump: 0
   canMove: 0
   canShoot: 0
   canSwitchWeapon: 0
   healthy: 0
+  healthyUI: {fileID: 0}
+  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826866001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +489,6 @@ MonoBehaviour:
   CurCD: []
   MaxCD: []
   PlayerPropertyInstance: {fileID: 0}
-  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826866004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,7 +507,6 @@ MonoBehaviour:
   leftHand: Hand_L_0
   rightHand: Hand_R_0
   PlayerPropertyInstance: {fileID: 0}
-  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826866005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,7 +525,6 @@ MonoBehaviour:
   aimUITransform: {fileID: 7520673313678665699}
   aimSpeed: 0
   PlayerPropertyInstance: {fileID: 0}
-  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826865994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,7 +540,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   PlayerPropertyInstance: {fileID: 0}
-  EventCenterInstance: {fileID: 0}
 --- !u!114 &7520673313826865992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,6 +582,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+--- !u!114 &2336047480427682855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7520673313826866011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5e789e69ce4e35a215f530fb95ece3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  PlayerPropertyInstance: {fileID: 0}
 --- !u!1 &7520673314377954974
 GameObject:
   m_ObjectHideFlags: 0
