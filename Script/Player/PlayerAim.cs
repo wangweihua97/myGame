@@ -31,6 +31,8 @@ namespace Player
         
         void InitUpdate()
         {
+            if (!isLocalPlayer)
+                SetAimUIVisible(false);
             PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyWDown", KeyWDown);
             PlayerPropertyInstance.EventCenterInstance.AddEventListener("keySDown", KeySDown);
             PlayerPropertyInstance.EventCenterInstance.AddEventListener("keyWUp", KeyWUp);
@@ -63,6 +65,8 @@ namespace Player
 
         void KeyEDown()
         {
+            if(!isLocalPlayer)
+                return;
             aimUIVisble = !aimUIVisble;
             SetAimUIVisible(aimUIVisble);
         }

@@ -22,18 +22,29 @@ public class InputMgr : NetworkBehaviour
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyDown(key))
         {
-            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyDown", key);
-            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Down");
-            CmdKeyDown(PlayerProperty.localPlayer, key);
+            ClickDown(key);
         }
         //事件中心模块 分发按下抬起事件
         if (Input.GetKeyUp(key))
         {
-            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyUp", key);
-            PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Up");
-            CmdKeyUp(PlayerProperty.localPlayer, key);
+            ClickUp(key);
         }
     }
+
+    public void ClickDown(KeyCode key)
+    {
+        PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyDown", key);
+        PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Down");
+        CmdKeyDown(PlayerProperty.localPlayer, key);
+    }
+
+    public void ClickUp(KeyCode key)
+    {
+        PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("keyUp", key);
+        PlayerProperty.localPlayer.EventCenterInstance.EventTrigger("key" + key + "Up");
+        CmdKeyUp(PlayerProperty.localPlayer, key);
+    }
+
     private void MyUpdate()
     {
         if (!isStart)

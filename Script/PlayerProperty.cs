@@ -1,7 +1,9 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 using ArmsState;
 using Item;
 using Mirror;
+using Net;
 using Player;
 using PlayerState;
 using Spine.Unity;
@@ -26,6 +28,7 @@ public class PlayerProperty : NetworkBehaviour
     public int healthy;
     public HealthyUI healthyUI;
     public EventCenter EventCenterInstance;
+    public InputMgr _inputMgr;
 
     private void Awake()
     {
@@ -38,6 +41,7 @@ public class PlayerProperty : NetworkBehaviour
         armsFsm = GetComponent<ArmsFSM>();
         EventCenterInstance = GetComponent<EventCenter>();
         playerDamage = GetComponent<PlayerDamage>();
+        _inputMgr = GetComponent<InputMgr>();
         playerDamage.PlayerPropertyInstance = this;
         playerAmination.PlayerPropertyInstance = this;
         GetComponent<PlayerAim>().PlayerPropertyInstance = this;
@@ -56,25 +60,37 @@ public class PlayerProperty : NetworkBehaviour
         if (isLocalPlayer)
         {
             localPlayer = this;
-            playerAmination.UpdateAnimatin(true);
+            UIMgr.instance.PlayerPropertyInstance = this;
         }
         else
         {
             anotherPlayer = this;
-            playerAmination.UpdateAnimatin(true);
+            
         }
+        playerAmination.UpdateAnimatin(true);
         healthyUI = UIMgr.instance.CreatHealthyUI().GetComponent<HealthyUI>();
         healthyUI.Init(transform,100,100);
+        GameMgr.instance.AddFristUpdateEventListener(UpdateHealthy);
     }
 
-    void UpdateHealthyUI()
+    void UpdateHealthy()
     {
-        
+        if (healthy <= 0)
+        {
+            if (isLocalPlayer)
+            {
+                UIMgr.instance.ShowResult("失败");
+            }
+            else
+            {
+                UIMgr.instance.ShowResult("成功");
+            }
+            StartCoroutine(EndGame());
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator EndGame()
     {
-        
+        yield return new WaitForSeconds(5f);
+        RoomPlayer.local.RetrunToRoom();
     }
 }

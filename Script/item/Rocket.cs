@@ -10,8 +10,8 @@ namespace Item
         {
             base.Init();
             liftTime = 10;
-            speed = 30;
-            GravitySpped = 4;
+            speed = 40;
+            GravitySpped = 8;
             explosionRadius = 55;
             name = "rocket";
             initZAngle = -90f;
@@ -26,6 +26,8 @@ namespace Item
             dead = false;
             GetComponent<SpriteRenderer>().flipY = faceHorizontal == -1;
             gameObject.transform.position = transform.position + new Vector3(1.6f * faceHorizontal* Mathf.Cos(Mathf.Deg2Rad*angle)+0.5f* faceHorizontal,0.8f+faceHorizontal*3f* Mathf.Sin(Mathf.Deg2Rad*angle),0);
+            Vector3 fireRotation = faceHorizontal == 1 ? new Vector3(50 ,0 ,0): new Vector3(-50 ,0 ,0);
+            gameObject.transform.GetChild(0).transform.localEulerAngles  = fireRotation;
             xSpeed = faceHorizontal * speed * power * Mathf.Cos(Mathf.Deg2Rad*angle);
             ySpped = faceHorizontal * speed * power * Mathf.Sin(Mathf.Deg2Rad*angle);
         }
