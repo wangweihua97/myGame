@@ -444,6 +444,7 @@ MonoBehaviour:
   healthy: 0
   healthyUI: {fileID: 0}
   EventCenterInstance: {fileID: 0}
+  _inputMgr: {fileID: 0}
 --- !u!114 &7520673313826866001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,6 +614,12 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   PlayerPropertyInstance: {fileID: 0}
+  distance: 0
+  scaleSpeed: 3
+  movepeed: 0.1
+  maxDistance: 30
+  minDistance: 5
+  useMouse: 1
 --- !u!1 &7520673314377954974
 GameObject:
   m_ObjectHideFlags: 0

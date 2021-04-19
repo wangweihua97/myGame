@@ -28,13 +28,13 @@ namespace Net
                 return;
             }
             local = this;
-            readyBtn =  GameObject.Find("Button").GetComponent<Button>();
+            readyBtn =  readyBtn == null ?GameObject.Find("Button").GetComponent<Button>() : readyBtn;
             readyBtn.onClick.AddListener(Ready);
-            anotherPlayer = GameObject.Find("playerReady2");
+            anotherPlayer = anotherPlayer == null ? GameObject.Find("playerReady2") : anotherPlayer;
             anotherPlayer.SetActive(false);
-            myReadyTip = GameObject.Find("ready1");
+            myReadyTip = myReadyTip == null?GameObject.Find("ready1") : myReadyTip;
             myReadyTip.SetActive(false);
-            anotherReadyTip = GameObject.Find("ready2");
+            anotherReadyTip = anotherReadyTip == null ?GameObject.Find("ready2") : anotherReadyTip;
             anotherReadyTip.SetActive(false);
         }
 
@@ -85,7 +85,6 @@ namespace Net
             }
             else
             {
-                num = 2;
                 if (!readyToBegin)
                 {
                     anotherReadyTip.SetActive(false);
@@ -95,6 +94,12 @@ namespace Net
                     anotherReadyTip.SetActive(true);
                 }
             }
+        }
+
+        private void LateUpdate()
+        {
+            if(!isLocalPlayer)
+                num = 2;
         }
 
         [Command]

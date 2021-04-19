@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using Mirror;
 using Net;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Item
 {
@@ -12,6 +14,7 @@ namespace Item
         public GameObject bullet;
         public GameObject rifleBullet;
         public GameObject grenade;
+        public GameObject boom;
 
         private void Awake()
         {
@@ -62,6 +65,38 @@ namespace Item
             if(NetMgr.instance)
                 NetMgr.instance.SpawnGameObject(go);
             return go;
+        }
+
+        public void CreatBoom(Vector2 pos,float size)
+        {
+            GameObject go = GameObjectPool.instance.GetGameObject("boom");
+            if (!go)
+            {
+                go = GameObject.Instantiate(boom);
+            }
+
+            go.transform.position = new Vector3(pos.x, pos.y, -1);
+            go.transform.localScale = new Vector3(size*5, size*5, size*5);
+            go.GetComponent<Animator>().Play("Boom");
+            YieldAniFinish(go.GetComponent<Animator>(), "Boom", () =>
+            {
+                GameObjectPool.instance.RemoveGameObject("Boom",go);
+            });
+        }
+        
+        public static IEnumerator YieldAniFinish(Animator ani,string aniName, UnityAction action)
+        {
+            yield return null;
+            AnimatorStateInfo stateinfo = ani.GetCurrentAnimatorStateInfo(0);
+
+            if (stateinfo.IsName(aniName) && (stateinfo.normalizedTime > 1.0f))
+            {
+                action();
+            }
+            else
+            {
+                instance.StartCoroutine(YieldAniFinish(ani,aniName, action));
+            }
         }
     }
 }

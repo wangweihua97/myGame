@@ -15,6 +15,7 @@ public class Events : NetworkBehaviour
         EventCenter instance = isLocalPlayer ? EventCenter.localPlayer : EventCenter.anotherPlayer;
         instance.AddEventListener("offTheGround",offTheGround);
         instance.AddEventListener("onTheGround",onTheGround);
+        instance.AddEventListener<int>("Hurt",Hurt);
         instance.AddEventListener<int>("turnAround",turnAround);
         instance.AddEventListener<Vector2>("ScreenMove",ScreenMove);
         GameMgr.instance.RemoveFristUpdateEventListener(InitUpdate);
@@ -36,6 +37,11 @@ public class Events : NetworkBehaviour
     }
 
     public void ScreenMove(Vector2 vector2)
+    {
+        
+    }
+
+    public void Hurt(int hurtValue)
     {
         
     }

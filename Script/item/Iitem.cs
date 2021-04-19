@@ -133,6 +133,7 @@ namespace Item
         {
             dead = true;
             startTIme = 0;
+            ItemMgr.instance.CreatBoom(pos, explosionRadius / 20);
             GameObjectPool.instance.RemoveGameObject(name ,gameObject);
             Collider2D[] colliders = Physics2D.OverlapCircleAll(pos, (float)explosionRadius/20);
             for (int i = 0; i < colliders.Length; i++)

@@ -61,6 +61,7 @@ public class PlayerProperty : NetworkBehaviour
         {
             localPlayer = this;
             UIMgr.instance.PlayerPropertyInstance = this;
+            CameraLocation();
         }
         else
         {
@@ -73,8 +74,15 @@ public class PlayerProperty : NetworkBehaviour
         GameMgr.instance.AddFristUpdateEventListener(UpdateHealthy);
     }
 
+    void CameraLocation()
+    {
+        GetComponent<PlayerCamera>().LocationPlayer();
+    }
+
     void UpdateHealthy()
     {
+        if (transform.position.y < -18)
+            healthy = 0;
         if (healthy <= 0)
         {
             if (isLocalPlayer)
@@ -90,7 +98,7 @@ public class PlayerProperty : NetworkBehaviour
     }
     IEnumerator EndGame()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(4f);
         RoomPlayer.local.RetrunToRoom();
     }
 }

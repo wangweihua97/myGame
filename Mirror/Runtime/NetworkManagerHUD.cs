@@ -31,14 +31,14 @@ namespace Mirror
             if (!showGUI) return;
 #pragma warning restore 618
 
-            GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, 215, 9999));
+            GUILayout.BeginArea(new Rect(Screen.width/2 - 400, Screen.height/2 - 150, 800, 300));
             if (!NetworkClient.isConnected && !NetworkServer.active)
             {
                 StartButtons();
             }
             else
             {
-                StatusLabels();
+                //StatusLabels();
             }
 
             // client ready
@@ -54,19 +54,22 @@ namespace Mirror
                 }
             }
 
-            StopButtons();
+            //StopButtons();
 
             GUILayout.EndArea();
         }
 
         void StartButtons()
         {
+            GUIStyle myStyle = new GUIStyle();
+            myStyle.fontSize = 40;
+            myStyle.normal.textColor=new Color(0,1,0);
             if (!NetworkClient.active)
             {
                 // Server + Client
                 if (Application.platform != RuntimePlatform.WebGLPlayer)
                 {
-                    if (GUILayout.Button("Host (Server + Client)"))
+                    if (GUILayout.Button("作为服务端和客服端",myStyle,GUILayout.Width(400),GUILayout.Height(100)))
                     {
                         manager.StartHost();
                     }
@@ -74,11 +77,11 @@ namespace Mirror
 
                 // Client + IP
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Client"))
+                if (GUILayout.Button("(推荐)客服端链接"+manager.networkAddress,myStyle,GUILayout.Width(800),GUILayout.Height(100)))
                 {
                     manager.StartClient();
                 }
-                manager.networkAddress = GUILayout.TextField(manager.networkAddress);
+                //manager.networkAddress = GUILayout.TextField(manager.networkAddress);
                 GUILayout.EndHorizontal();
 
                 // Server Only
@@ -89,14 +92,14 @@ namespace Mirror
                 }
                 else
                 {
-                    if (GUILayout.Button("Server Only")) manager.StartServer();
+                    if (GUILayout.Button("作为服务器端",myStyle,GUILayout.Width(400),GUILayout.Height(100))) manager.StartServer();
                 }
             }
             else
             {
                 // Connecting
-                GUILayout.Label("Connecting to " + manager.networkAddress + "..");
-                if (GUILayout.Button("Cancel Connection Attempt"))
+                GUILayout.Label("Connecting to " + manager.networkAddress + "..",myStyle);
+                if (GUILayout.Button("Cancel Connection Attempt",myStyle))
                 {
                     manager.StopClient();
                 }

@@ -18,7 +18,7 @@ namespace Player
         public PlayerProperty PlayerPropertyInstance;
         
         //摄像机距离
-        public float distance = 10.0f;
+        public float distance = 0f;
         public float scaleSpeed = 3f;
         public float movepeed = 0.1f;
  
@@ -41,10 +41,15 @@ namespace Player
 
         //这个变量用来记录单指双指的变换
         private bool m_IsSingleFinger;
-         void Start()
+
+        void Awake()
+        {
+            m_CameraOffset = new Vector2(0, 0);
+            mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        }
+
+        void Start()
          {
-             m_CameraOffset = new Vector2(0, 0);
-             mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
              GameMgr.instance.AddFristUpdateEventListener(InitUpdate);
              GameMgr.instance.AddUpdateEventListener(ScreenMove);
              GameMgr.instance.AddUpdateEventListener(CheckInput);
@@ -95,16 +100,20 @@ namespace Player
 
             }*/
         }
- 
+
+        public void LocationPlayer()
+        {
+            mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y,
+                mainCamera.transform.position.z);
+        }
+
         void CheckInput()
         {
             
-            //判断触摸数量为单点触摸
             if (Input.touchCount == 1)
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Began || !m_IsSingleFinger)
                 {
-                    //在开始触摸或者从两字手指放开回来的时候记录一下触摸的位置
                     lastSingleTouchPosition = Input.GetTouch(0).position;
                 }
                 if (Input.GetTouch(0).phase == TouchPhase.Moved)
@@ -116,8 +125,6 @@ namespace Player
             }
             else if (Input.touchCount > 1)
             {
-                //当从单指触摸进入多指触摸的时候,记录一下触摸的位置
-                //保证计算缩放都是从两指手指触碰开始的
                 if (m_IsSingleFinger)
                 {
                     oldPosition1 = Input.GetTouch(0).position;
@@ -142,7 +149,6 @@ namespace Player
                 if (Input.GetMouseButtonDown(0))
                 {
                     lastSingleTouchPosition = Input.mousePosition;
-                    Debug.Log("GetMouseButtonDown:" + lastSingleTouchPosition);
                 }
                 if (Input.GetMouseButton(0))
                 {
@@ -151,35 +157,18 @@ namespace Player
             }
         }
      
-        /// <summary>
-        /// 触摸缩放摄像头
-        /// </summary>
         private void ScaleCamera()
         {
-            //计算出当前两点触摸点的位置
             var tempPosition1 = Input.GetTouch(0).position;
             var tempPosition2 = Input.GetTouch(1).position;
-     
-     
             float currentTouchDistance = Vector3.Distance(tempPosition1, tempPosition2);
             float lastTouchDistance = Vector3.Distance(oldPosition1, oldPosition2);
-     
-            //计算上次和这次双指触摸之间的距离差距
-            //然后去更改摄像机的距离
             distance = (currentTouchDistance - lastTouchDistance) * scaleSpeed * Time.deltaTime;
-     
-     
-            //把距离限制住在min和max之间
-            distance = Mathf.Clamp(distance, minDistance, maxDistance);
-     
-     
-            //备份上一次触摸点的位置，用于对比
             oldPosition1 = tempPosition1;
             oldPosition2 = tempPosition2;
         }
      
      
-        //Update方法一旦调用结束以后进入这里算出重置摄像机的位置
         private void LateUpdate()
         {
             if (m_CameraOffset.x != 0 || m_CameraOffset.y != 0)
@@ -204,6 +193,7 @@ namespace Player
                 else if (size < minSize)
                     size = minSize;
                 mainCamera.orthographicSize = size;
+                distance = 0;
             }
             
         }

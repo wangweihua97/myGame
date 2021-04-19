@@ -19,6 +19,7 @@ namespace Player
 
         public void Hurt(int hurt)
         {
+            PlayerPropertyInstance.EventCenterInstance.EventTrigger("Hurt",hurt);
             PlayerPropertyInstance.healthy -= hurt;
             PlayerPropertyInstance.healthyUI.RefreshText();
         }
